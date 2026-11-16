@@ -41,7 +41,7 @@ class _RootState extends State<Root> {
       case 2:
         return Tipe(go: go);
       case 3:
-          return const MainShell();
+         return MainShell(onLogout: () => go(0));
       default:
         return LoginScreen(go: go);
     }

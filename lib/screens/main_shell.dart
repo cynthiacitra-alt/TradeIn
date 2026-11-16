@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../core/constants.dart';
 import 'home_screen.dart';
+import 'account_screen.dart';
 
 /// Kerangka utama: isi layar + navigasi bawah (5 tab).
 class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+  final VoidCallback onLogout;
+  const MainShell({super.key, required this.onLogout});
   @override
   State<MainShell> createState() => _MainShellState();
 }
@@ -19,7 +21,7 @@ class _MainShellState extends State<MainShell> {
       const _Soon('Search'),
       const _Soon('Posting'),
       const _Soon('Notifikasi'),
-      const _Soon('Account'),
+            AccountScreen(onLogout: widget.onLogout),
     ];
     const icons = [Icons.home_outlined, Icons.search, Icons.add_circle_outline, Icons.sync, Icons.account_circle_outlined];
     const active = [Icons.home, Icons.search, Icons.add_circle, Icons.sync, Icons.account_circle];

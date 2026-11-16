@@ -5,8 +5,9 @@ class Item {
   const Item(this.name, this.desc, this.cat, this.user);
 }
 
-class Account {
-  final String username, email, password;
+class Account {  
+  String username;
+  final String email, password;
   final Set<String> interests = {}; // minat yang sudah disimpan
   Account(this.username, this.email, this.password);
 }
@@ -83,6 +84,31 @@ class AppState extends ChangeNotifier {
     interests
       ..clear()
       ..addAll(a.interests);
+    notifyListeners();
+  }
+
+    // UPDATE: ubah username saja. Mengembalikan pesan error, atau null kalau berhasil
+  String? updateUsername(String username) {
+    final me = current;
+    if (me == null) return 'Belum login';
+    final u = find(username);
+    if (u != null && u != me) return 'Username sudah dipakai';
+    me.username = username;
+    user = username;
+    notifyListeners();
+    return null;
+  }
+
+  // DELETE: hapus akun yang sedang login
+  void deleteAccount() {
+    accounts.remove(current);
+    logout();
+  }
+
+  void logout() {
+    current = null;
+    user = '';
+    interests.clear();
     notifyListeners();
   }
 
