@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             LayoutBuilder(
               builder: (context, box) {
-                final fs = (box.maxWidth / 390 * 14).clamp(13.0, 17.0); 
+                final fs = (box.maxWidth / 390 * 14).clamp(13.0, 17.0);
                 final pad = (box.maxWidth * 0.04).clamp(12.0, 32.0);
                 const gap = 8.0;
                 final avail = box.maxWidth - pad * 2;
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: list.isEmpty
                   ? const Center(
                       child: Text(
-                        'Belum ada barang di kategori ini.',
+                        'Belum ada barang untuk di tukar',
                         style: TextStyle(color: Colors.grey),
                       ),
                     )
@@ -127,33 +127,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-
-
-
-
-
-
-
-
-
 /// Halaman detail satu barang: foto, nama, deskripsi lengkap, tombol love.
-class DetailScreen extends StatelessWidget { 
+class DetailScreen extends StatelessWidget {
   final Item item;
   const DetailScreen(this.item, {super.key});
- 
+
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     final pad = (w * 0.05).clamp(16.0, 32.0);
- 
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        title: const Text('Detail Barang',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        title: const Text(
+          'Detail Barang',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
       ),
       body: ListenableBuilder(
         listenable: app, // supaya love langsung berubah saat diketuk
@@ -162,7 +155,9 @@ class DetailScreen extends StatelessWidget {
           return Align(
             alignment: Alignment.topCenter,
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600), // layar lebar tidak terlalu melebar
+              constraints: const BoxConstraints(
+                maxWidth: 600,
+              ), // layar lebar tidak terlalu melebar
               child: ListView(
                 padding: EdgeInsets.fromLTRB(pad, 4, pad, 24),
                 children: [
@@ -174,49 +169,91 @@ class DetailScreen extends StatelessWidget {
                         color: kPh,
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: const Icon(Icons.image_outlined, color: Colors.grey, size: 64),
+                      child: const Icon(
+                        Icons.image_outlined,
+                        color: Colors.grey,
+                        size: 64,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
- 
+
                   // ===== nama + tombol love =====
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Expanded(
-                      child: Text(item.name,
-                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, height: 1.25)),
-                    ),
-                    const SizedBox(width: 8),
-                    InkWell(
-                      onTap: () {
-                        app.toggleLike(item.name);
-                        toast(context, liked ? 'Dihapus dari suka' : 'Ditambahkan ke suka');
-                      },
-                      borderRadius: BorderRadius.circular(30),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(color: kCard, shape: BoxShape.circle),
-                        child: Icon(
-                          liked ? Icons.favorite : Icons.favorite_border,
-                          size: 26,
-                          color: liked ? Colors.redAccent : Colors.black87,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          item.name,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            height: 1.25,
+                          ),
                         ),
                       ),
-                    ),
-                  ]),
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: () {
+                          app.toggleLike(item.name);
+                          toast(
+                            context,
+                            liked ? 'Dihapus dari suka' : 'Ditambahkan ke suka',
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(30),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                            color: kCard,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            liked ? Icons.favorite : Icons.favorite_border,
+                            size: 26,
+                            color: liked ? Colors.redAccent : Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 10),
- 
+
                   // ===== kategori + penjual =====
-                  Wrap(spacing: 8, runSpacing: 8, children: [
-                    _Tag(Icons.sell_outlined, item.cat),
-                    _Tag(Icons.account_circle_outlined, '@${item.user}'),
-                  ]),
- 
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Divider(height: 1)),
- 
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      _Tag(Icons.sell_outlined, item.cat),
+                      _Tag(Icons.account_circle_outlined, '@${item.user}'),
+                    ],
+                  ),
+
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: Divider(height: 1),
+                  ),
+
                   // ===== deskripsi lengkap (tanpa dipotong) =====
-                  const Text('Deskripsi', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
+                  const Text(
+                    'Deskripsi',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                  ),
                   const SizedBox(height: 8),
-                  Text(item.desc, style: const TextStyle(fontSize: 15, height: 1.55)),
+                  Text(
+                    item.kondisi,
+                    style: const TextStyle(fontSize: 15, height: 1.55),
+                  ),
+
+                  const Text(
+                    'Status',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    item.kondisi,
+                    style: const TextStyle(fontSize: 15, height: 1.55),
+                  ),
                 ],
               ),
             ),
@@ -226,20 +263,26 @@ class DetailScreen extends StatelessWidget {
     );
   }
 }
- 
+
 class _Tag extends StatelessWidget {
   final IconData icon;
   final String text;
   const _Tag(this.icon, this.text);
- 
+
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(color: kBeige, borderRadius: BorderRadius.circular(20)),
-        child: Row(mainAxisSize: MainAxisSize.min, children: [
-          Icon(icon, size: 16, color: Colors.black54),
-          const SizedBox(width: 6),
-          Text(text, style: const TextStyle(fontSize: 13)),
-        ]),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    decoration: BoxDecoration(
+      color: kBeige,
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 16, color: Colors.black54),
+        const SizedBox(width: 6),
+        Text(text, style: const TextStyle(fontSize: 13)),
+      ],
+    ),
+  );
 }
